@@ -8,4 +8,8 @@ var contenidoSchema = new Schema({
   _url: {type:String}
 });
 
-module.exports = mongoose.model('Contenido', contenidoSchema);
+module.exports = {
+  Contenido: mongoose.model('Contenido', contenidoSchema,'Contenido'),
+  ContenidoSchema: contenidoSchema
+};
+

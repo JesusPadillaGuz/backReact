@@ -24,11 +24,12 @@ router.get('/', function(req, res) {
 app.use(router);
 
 var UsuarioCtrl = require('./controllers/usuarioController');
-
+var ResenaCtrl = require('./controllers/reseñaController');
+var ComentarioCtrl = require('./controllers/comentarioController');
 // API routes
 var users = express.Router();
 
-users.route('/')
+users.route('/users')
   .get(UsuarioCtrl.findAllUsers)
   .post(UsuarioCtrl.addUser);
 
@@ -41,6 +42,33 @@ users.route('/')
   .get(UsuarioCtrl.loginUser);
 
 app.use('/api', users);
+
+var resenas = express.Router();
+resenas.route('/resenas')
+  .get(ResenaCtrl.findAllResenas)
+  .post(ResenaCtrl.addResena);
+
+  resenas.route('/resenas/:id')
+  .get(ResenaCtrl.findById)
+  .put(ResenaCtrl.updateResena)
+  .delete(ResenaCtrl.deleteResena);
+  resenas.route('/resenas/ContenidosUsuario')
+.get(ResenaCtrl.findResenasPorContenidosUsuario);
+
+app.use('/api', resenas);
+
+var comentarios = express.Router();
+comentarios.route('/comentarios')
+  .get(ComentarioCtrl.findAllComentarios)
+  .post(ComentarioCtrl.addComentario);
+
+  resenas.route('/comentarios/:id')
+  .get(ComentarioCtrl.findById)
+  .delete(ComentarioCtrl.deleteComentario);
+
+app.use('/api', comentarios);
+
+
 
 
 

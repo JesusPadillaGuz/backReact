@@ -9,4 +9,4 @@ var comentarioSchema = new Schema({
   _comentario:  { type: String },
 });
 
-module.exports = mongoose.model('Comentario', comentarioSchema);
+module.exports = mongoose.model('Comentario', comentarioSchema,'Comentario');

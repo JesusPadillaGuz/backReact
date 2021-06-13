@@ -42,8 +42,7 @@ exports.findById = async(req, res)=> {
 
 //POST - Insert 
 exports.addResena = function(req, res) {
-        console.log('POST');
-        console.log(req.body);
+        console.log('POST entra');
     var uuid = require('uuid');
 
     var dat= new Date().toISOString().slice(0, 10);
@@ -52,13 +51,12 @@ exports.addResena = function(req, res) {
             _idUsuario:    req.body._idUsuario,
             _idContenido: req.body._idContenido,
             _fecha: dat,
-            _calificacion: req.body._calificacion
+            _calificacion: req.body._calificacion,
+            _descripcion: req.body._descripcion
         });
-    
+    console.log("resena",resena);
         resena.save(function(err, resena) {
             if(err) return res.status(500).send( err.message);
-        
-        
     //agarres el id del contenido que llega y traer de ese contenido traer todas las calificaciones
     //separarlas en una lista por calif del 1 al 5 
     Resena.find({_idContenido: req.body._idContenido}, async (err, resenas)=> {
@@ -93,16 +91,14 @@ exports.addResena = function(req, res) {
 
     //PUT - Update a register already exists
 exports.updateResena = function(req, res) {
-    Resena.findById(req.params.id, function(err, user) {
-        user._nombre=    req.body._nombre;  
-        user._apellido= req.body._apellido;  
-        user._fechaNacimiento= req.body._fechaNacimiento;  
-        user._correo= req.body._correo;  
-        user._contrasena= req.body._contrasena;  
-        user._url= req.body._url;  
-        user.save(function(err) {
+    Resena.findById(req.body._id, function(err, resena) {
+        //resena._fecha= dat;
+        console.log("probando",req.body);
+        resena._calificacion= req.body._calificacion;
+        resena._descripcion= req.body._descripcion;
+        resena.save(function(err) {
                 if(err) return res.status(500).send(err.message);
-          res.status(200).jsonp(user);
+          res.status(200).jsonp(resena);
             });
         });
     };

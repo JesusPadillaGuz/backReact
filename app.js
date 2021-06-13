@@ -1,3 +1,4 @@
+    //hacer todos los update como el de usuarioController
     var express    = require("express"),  
     app        = express(),
     http       = require("http"),

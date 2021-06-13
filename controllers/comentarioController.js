@@ -42,7 +42,7 @@ exports.addComentario = function(req, res) {
 
     //DELETE - Delete 
 exports.deleteComentario = function(req, res) {
-    Comentario.findById(req.query.id, function(err, comentario) {
+    Comentario.findById(req.body._id, function(err, comentario) {
         console.log("here",req.query.id);
         comentario.remove(function(err) {
                 if(err) return res.status(500).send(err.message);

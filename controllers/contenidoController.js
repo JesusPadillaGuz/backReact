@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 const Resena = require('../models/Reseña');
 var emit = require('../app');
-const Contenido = require('../models/Contenido');
+const {Contenido, ContenidoSchema} = require('../models/Contenido');
 var uuid = require('uuid');
 
 exports.getAllScoresByContentId = function(req, res) {
@@ -59,16 +59,13 @@ exports.findById = function(req, res) {
  
 //POST - Insert 
 exports.addContenido = function(req, res) {
-        console.log('POST');
-     
-    
+        console.log('POST llama api contenido');
         var contenido = new Contenido({
             _id:  uuid.v4(),  
             _titulo:    req.body._titulo,
             _categoria: req.body._categoria,
             _url: req.body._url
         });
-
         console.log("contenido", contenido);
         contenido.save(function(err, contenido) {
             if(err) return res.status(500).send( err.message);
@@ -92,7 +89,7 @@ exports.updateContenido = function(req, res) {
 
     //DELETE - Delete 
 exports.deleteContenido = function(req, res) {
-    Contenido.findById(req.query.id, function(err, contenido) {
+    Contenido.findById(req.body._id, function(err, contenido) {
         contenido.remove(function(err) {
                 if(err) return res.status(500).send(err.message);
           res.status(200).send();

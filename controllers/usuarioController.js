@@ -55,24 +55,25 @@ exports.addUser = function(req, res) {
 
     //PUT - Update a register already exists
 exports.updateUser = function(req, res) {
-    Usuario.findById(req.params.id, function(err, user) {
-        user._id=  req.body._id;  
+    Usuario.findOne({_id: req.body._id}, function(err, user) {
         user._nombre=    req.body._nombre;  
         user._apellido= req.body._apellido;  
-        user._fechaNacimiento= req.body._fechaNacimiento;  
-        user._correo= req.body._correo;  
-        user._contrasena= req.body._contrasena;  
-        user._url= req.body._url;  
+
+        user._url= req.body._url; 
         user.save(function(err) {
                 if(err) return res.status(500).send(err.message);
-          res.status(200).jsonp(user);
-            });
+          res.status(200).send();
+            }); 
         });
+
+
     };
 
     //DELETE - Delete 
 exports.deleteUser = function(req, res) {
-        Usuario.findById(req.query.id, function(err, user) {
+    console.log("entro");
+        Usuario.findById(req.body._id, function(err, user) {
+            console.log("usuario",user);
             user.remove(function(err) {
                 if(err) return res.status(500).send(err.message);
           res.status(200).send();

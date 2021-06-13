@@ -8,6 +8,7 @@ var resenaSchema = new Schema({
   _idUsuario:     { type: String },
   _idContenido:  { type: String },
   _contenido:  [{ type: ContenidoSchema }],
+  _descripcion: {type: String},
   _fecha: { type: Date },
   _calificacion:  { type: Number }
 });

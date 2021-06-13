@@ -17,6 +17,15 @@ app.use((req, res, next) => {
   next();
 });
 
+const io = require('socket.io')(server);
+
+module.exports = (emmitingData,id) => {
+  console.log("entro",id);
+  //io.sockets.emit(id,emmitingData);
+  socket.broadcast.emit(id,emmitingData);
+}
+
+
 var router = express.Router();
 router.get('/', function(req, res) {
    res.send("Hello World!");
@@ -26,47 +35,71 @@ app.use(router);
 var UsuarioCtrl = require('./controllers/usuarioController');
 var ResenaCtrl = require('./controllers/reseñaController');
 var ComentarioCtrl = require('./controllers/comentarioController');
+var ContenidoCtrl = require('./controllers/contenidoController');
 // API routes
-var users = express.Router();
+var users = router;
 
 users.route('/users')
   .get(UsuarioCtrl.findAllUsers)
   .post(UsuarioCtrl.addUser);
 
-  users.route('/users/:id')
+  users.route('/users/ById')
   .get(UsuarioCtrl.findById)
   .put(UsuarioCtrl.updateUser)
   .delete(UsuarioCtrl.deleteUser);
 
   users.route('/login')
-  .get(UsuarioCtrl.loginUser);
+  .post(UsuarioCtrl.loginUser);
 
 app.use('/api', users);
 
-var resenas = express.Router();
+var resenas =  router;
 resenas.route('/resenas')
   .get(ResenaCtrl.findAllResenas)
   .post(ResenaCtrl.addResena);
 
-  resenas.route('/resenas/:id')
+  resenas.route('/resenas/ById')
   .get(ResenaCtrl.findById)
   .put(ResenaCtrl.updateResena)
   .delete(ResenaCtrl.deleteResena);
-  resenas.route('/resenas/ContenidosUsuario')
-.get(ResenaCtrl.findResenasPorContenidosUsuario);
+
+  resenas.route('/resenas/ByIdUsuario')
+  .get(ResenaCtrl.findByIdUsuario
+    );
+
+  resenas.route('/resenas/Especial')
+.get(ResenaCtrl.findResenasEspecial);
+
+resenas.route('/resenas/contenidos/ByUsuario')
+.get(ResenaCtrl.findContenidosUsuario);
 
 app.use('/api', resenas);
 
-var comentarios = express.Router();
+var comentarios = router;
 comentarios.route('/comentarios')
   .get(ComentarioCtrl.findAllComentarios)
   .post(ComentarioCtrl.addComentario);
 
-  resenas.route('/comentarios/:id')
+  resenas.route('/comentarios/ById')
   .get(ComentarioCtrl.findById)
   .delete(ComentarioCtrl.deleteComentario);
 
 app.use('/api', comentarios);
+
+ var contenidos = router;
+contenidos.route('/contenidos')
+  .get(ContenidoCtrl.findAllContenidos)
+  .post(ContenidoCtrl.addContenido);
+
+  resenas.route('/contenidos/ById')
+  .get(ContenidoCtrl.findById)
+  .put(ContenidoCtrl.updateContenido)
+  .delete(ContenidoCtrl.deleteContenido);
+
+contenidos.route('/contenidos/calificaciones')
+  .get(ContenidoCtrl.getAllScoresByContentId); 
+
+app.use('/api', contenidos);
 
 
 
@@ -76,8 +109,8 @@ mongoose.connect('mongodb://localhost/react', function(err, res) {
   if(err) {
     console.log('ERROR: connecting to Database. ' + err);
   }
-  app.listen(3000, function() {
-    console.log("Node server running on http://localhost:3000");
+  app.listen(3001, function() {
+    console.log("Node server running on http://localhost:3001");
  });
 });
 

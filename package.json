@@ -8,6 +8,7 @@
         "method-override": "^2.1.2",
         "mongodb": "^3.6.9",
         "mongoose": "^4.2.8",
+        "socket.io": "^4.1.2",
         "uuid": "^8.3.2"
     }
 }

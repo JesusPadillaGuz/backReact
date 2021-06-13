@@ -24,7 +24,7 @@ exports.findById = function(req, res) {
 exports.addComentario = function(req, res) {
         console.log('POST');
         console.log(req.body);
-        var dat= new Date();
+        var dat= new Date().toISOString().slice(0, 10);
     var uuid = require('uuid');
         var comentario = new Comentario({
             _id:  uuid.v4(),
@@ -42,10 +42,11 @@ exports.addComentario = function(req, res) {
 
     //DELETE - Delete 
 exports.deleteComentario = function(req, res) {
-    Comentario.findById(req.params.id, function(err, comentario) {
+    Comentario.findById(req.query.id, function(err, comentario) {
+        console.log("here",req.query.id);
         comentario.remove(function(err) {
                 if(err) return res.status(500).send(err.message);
-          res.status(200).send();
+          res.status(200).send("200");
             })
         });
     };

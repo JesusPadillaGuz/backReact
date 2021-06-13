@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 const Usuario = require('../models/Usuario');
 //var Usuario  = mongoose.model('Usuario');
+var uuid = require('uuid');
 
 
 //GETALL
@@ -27,17 +28,17 @@ exports.findById = function(req, res) {
         Usuario.findOne({_correo: req.body._correo, _contrasena: req.body._contrasena}, function(err, user) {
             if(err) return res.send(500, err.message);
         
-            console.log('GET /login/' + req.body._correo);
+            console.log('POST /login/' + req.body._correo);
                 res.status(200).jsonp(user);
             });
         };  
 //POST - Insert 
 exports.addUser = function(req, res) {
         console.log('POST');
-        console.log(req.body);
+     
     
         var usuario = new Usuario({
-            _id:  req.body._id,  
+            _id:  uuid.v4(),  
             _nombre:    req.body._nombre,
             _apellido: req.body._apellido,
             _fechaNacimiento: req.body._fechaNacimiento,
@@ -45,7 +46,7 @@ exports.addUser = function(req, res) {
             _contrasena: req.body._contrasena,
             _url: req.body._url,
         });
-    
+        console.log("usuario", usuario);
         usuario.save(function(err, usuario) {
             if(err) return res.status(500).send( err.message);
         res.status(200).jsonp(usuario);
@@ -71,7 +72,7 @@ exports.updateUser = function(req, res) {
 
     //DELETE - Delete 
 exports.deleteUser = function(req, res) {
-        Usuario.findById(req.params.id, function(err, user) {
+        Usuario.findById(req.query.id, function(err, user) {
             user.remove(function(err) {
                 if(err) return res.status(500).send(err.message);
           res.status(200).send();

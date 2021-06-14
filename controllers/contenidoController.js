@@ -6,7 +6,7 @@ const {Contenido, ContenidoSchema} = require('../models/Contenido');
 var uuid = require('uuid');
 
 exports.getAllScoresByContentId = function(req, res) {
-
+    console.log('idContenido: ',req.query.id);
     Resena.find({_idContenido: req.query.id}, async (err, resenas)=> {
         if(err) return res.send(500, err.message);
         var counterScore ={
@@ -16,6 +16,7 @@ exports.getAllScoresByContentId = function(req, res) {
             "4star":0,
             "5star":0
         };
+        console.log("HOLIWI",resenas);
         for(let item in resenas){
             switch(resenas[item]['_calificacion']){
                 case 1:counterScore['1star']+=1;

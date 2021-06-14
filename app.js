@@ -1,11 +1,12 @@
-    //hacer todos los update como el de usuarioController
-    var express    = require("express"),  
-    app        = express(),
-    http       = require("http"),
-    server     = http.createServer(app),
-    bodyParser = require('body-parser'),
-    mongoose   = require('mongoose');
-    var methodOverride  = require("method-override");
+//hacer todos los update como el de usuarioController
+const express    = require("express");  
+const app        = express();
+const server       = require("http").createServer(app);
+/* const server     = http.createServer(app); */
+const io         = require('socket.io')(server);
+bodyParser = require('body-parser');
+mongoose   = require('mongoose');
+var methodOverride  = require("method-override");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -18,13 +19,46 @@ app.use((req, res, next) => {
   next();
 });
 
-const io = require('socket.io')(server);
+server.listen(3000, function() {
+  console.log("Node server running on http://localhost:3001");
+});
 
-module.exports = (emmitingData,id) => {
-  console.log("entro",id);
-  //io.sockets.emit(id,emmitingData);
-  socket.broadcast.emit(id,emmitingData);
-}
+io.on("connection", socket => {
+  console.log("a user connected :D");
+  socket.on("chat message", msg => {
+    io.emit("chat message", msg);
+  });
+});
+
+let emmitingData = {
+  "1star":0,
+  "2star":0,
+  "3star":0,
+  "4star":0,
+  "5star":0
+};
+
+/* setInterval(() => {
+  console.log('enit');
+  io.sockets.emit('chartData', [
+    { quarter: 1, earnings: Math.floor(Math.random() * 100) + 10 },
+    { quarter: 2, earnings: Math.floor(Math.random() * 100) + 10 },
+    { quarter: 3, earnings: Math.floor(Math.random() * 100) + 10 },
+    { quarter: 4, earnings: Math.floor(Math.random() * 100) + 10 }
+  ]);
+}, 5000); */
+  module.exports = (emmitingData,id) => {
+      io.sockets.emit(id,[
+        { quarter: 1, earnings: emmitingData['1star'] },
+        { quarter: 2, earnings: emmitingData['2star'] },
+        { quarter: 3, earnings: emmitingData['3star'] },
+        { quarter: 4, earnings: emmitingData['4star'] },
+        { quarter: 5, earnings: emmitingData['5star'] }
+      ]);
+  };
+
+
+
 
 
 var router = express.Router();
@@ -110,8 +144,5 @@ mongoose.connect('mongodb://localhost/react', function(err, res) {
   if(err) {
     console.log('ERROR: connecting to Database. ' + err);
   }
-  app.listen(3001, function() {
-    console.log("Node server running on http://localhost:3001");
- });
-});
 
+});
